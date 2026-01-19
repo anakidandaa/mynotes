@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 
-class AddNoteScreen extends StatelessWidget {
+class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({super.key});
+
+  @override
+  State<AddNoteScreen> createState() => _AddNoteScreenState();
+}
+
+class _AddNoteScreenState extends State<AddNoteScreen> {
+  final TextEditingController _judulController = TextEditingController();
+  final TextEditingController _isiController = TextEditingController();
+
+  @override
+  void dispose() {
+    _judulController.dispose();
+    _isiController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,20 +24,45 @@ class AddNoteScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Tambah Catatan"),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "Halaman Tambah Data",
-              style: TextStyle(fontSize: 20),
+            TextField(
+              controller: _judulController,
+              decoration: const InputDecoration(
+                labelText: 'Judul Catatan',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _isiController,
+              maxLines: 4,
+              decoration: const InputDecoration(
+                labelText: 'Isi Catatan',
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                if (_judulController.text.isEmpty ||
+                    _isiController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Judul dan isi wajib diisi!"),
+                    ),
+                  );
+                  return;
+                }
+
+                Navigator.pop(context, {
+                  "judul": _judulController.text,
+                  "isi": _isiController.text,
+                });
               },
-              child: const Text("Kembali"),
+              child: const Text("Simpan"),
             ),
           ],
         ),

@@ -12,10 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Daftar Catatan',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const NoteListScreen(),
+      title: "Aplikasi Catatan",
       debugShowCheckedModeBanner: false,
+      home: const NoteListScreen(),
       routes: {
         '/add-note': (context) => const AddNoteScreen(),
       },

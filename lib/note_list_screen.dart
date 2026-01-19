@@ -9,10 +9,19 @@ class NoteListScreen extends StatefulWidget {
 }
 
 class _NoteListScreenState extends State<NoteListScreen> {
-  final List<String> _notes = [
-    "Belajar Flutter State Management",
-    "Membuat UI dengan Widget Dasar",
-    "Menguji Callback Function di Flutter"
+  final List<Map<String, String>> _notes = [
+    {
+      "judul": "Belajar Flutter State Management",
+      "isi": "Mempelajari setState dan Provider"
+    },
+    {
+      "judul": "Membuat UI dengan Widget Dasar",
+      "isi": "Scaffold, Container, Row, Column"
+    },
+    {
+      "judul": "Menguji Callback Function di Flutter",
+      "isi": "Fungsi onTap, onPressed, dll"
+    }
   ];
 
   int _counter = 0;
@@ -43,7 +52,6 @@ class _NoteListScreenState extends State<NoteListScreen> {
             const SizedBox(height: 12),
             Text(_typedText, style: const TextStyle(fontSize: 18)),
             const Divider(height: 24),
-
             Expanded(
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
@@ -52,22 +60,26 @@ class _NoteListScreenState extends State<NoteListScreen> {
                 child: ListView.builder(
                   itemCount: _notes.length,
                   itemBuilder: (context, index) {
+                    final note = _notes[index];
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 6),
                       elevation: 3,
                       child: ListTile(
                         leading: const Icon(Icons.note),
                         title: Text(
-                          _notes[index],
-                          style: TextStyle(fontSize: _size, color: _color),
+                          note['judul'] ?? '',
+                          style: TextStyle(
+                            fontSize: _size,
+                            color: _color,
+                          ),
                         ),
+                        subtitle: Text(note['isi'] ?? ''),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailNoteScreen(
-                                note: _notes[index],
-                              ),
+                              builder: (context) =>
+                                  DetailNoteScreen(note: note),
                             ),
                           );
                         },
@@ -77,7 +89,6 @@ class _NoteListScreenState extends State<NoteListScreen> {
                 ),
               ),
             ),
-
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 400),
               style: TextStyle(fontSize: 18, color: _color),
@@ -87,8 +98,13 @@ class _NoteListScreenState extends State<NoteListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/add-note');
+        onPressed: () async {
+          final result = await Navigator.pushNamed(context, '/add-note');
+          if (result != null && result is Map<String, String>) {
+            setState(() {
+              _notes.add(result);
+            });
+          }
         },
         child: const Icon(Icons.add),
       ),

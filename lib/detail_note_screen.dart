@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
 class DetailNoteScreen extends StatelessWidget {
-  final String note;
+  final Map<String, String> note;
 
   const DetailNoteScreen({super.key, required this.note});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Detail Catatan")),
+      appBar: AppBar(
+        title: Text(note['judul'] ?? 'Detail Catatan'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Text(
-          note,
-          style: const TextStyle(fontSize: 22),
+          note['isi'] ?? 'Tidak ada isi catatan',
+          style: const TextStyle(fontSize: 18),
         ),
       ),
     );
